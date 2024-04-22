@@ -52,7 +52,7 @@ afterEvaluate {
 
                 groupId = "io.github.weredevelopers"
                 artifactId = "usecaserx"
-                version = "1.1"
+                version = "1.0"
             }
         }
     }
