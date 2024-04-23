@@ -18,6 +18,7 @@ class HomeActivity : BaseActivity() {
         initObserver()
         homeViewModel.getMessageFromBackEnd("id")
         findViewById<TextView>(R.id.messageCache).text = homeViewModel.getMessageCache("id").toString()
+        homeViewModel.deleteItem()
     }
 
     private fun initObserver() {
@@ -38,6 +39,27 @@ class HomeActivity : BaseActivity() {
                     ResourceState.ERROR -> {
                         responseInterface.onLoading(false)
                         responseInterface.onError(it.error!!)
+                    }
+                }
+            }
+        }
+
+        homeViewModel.deleteResultLiveData.observe(this) {
+            val responseInterface = this
+            if (it != null) {
+                when (it.resourceState) {
+                    ResourceState.LOADING -> {
+                        responseInterface.onLoading(true)
+                    }
+
+                    ResourceState.SUCCESS -> {
+                        responseInterface.onLoading(false)
+                        findViewById<TextView>(R.id.deleteItem).text = "delete item? ${it.data}"
+                    }
+
+                    ResourceState.ERROR -> {
+                        responseInterface.onLoading(false)
+                        findViewById<TextView>(R.id.deleteItem).text = it.error?.message
                     }
                 }
             }

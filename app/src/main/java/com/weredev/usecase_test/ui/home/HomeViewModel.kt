@@ -8,6 +8,7 @@ import com.weredev.usecaserx.utils.Resource
 import com.weredev.usecase_test.data.repository.RepositoryBackEndImpl
 import com.weredev.usecase_test.data.repository.RepositoryCacheImpl
 import com.weredev.usecase_test.domain.repository.RepositoryCache
+import com.weredev.usecase_test.domain.usecase.DeleteItemToDB
 import com.weredev.usecase_test.domain.usecaserx.GetMessageFromBackEndUseCase
 import com.weredev.usecase_test.domain.usecaserx.GetMessageFromCacheUseCase
 
@@ -16,8 +17,10 @@ class HomeViewModel : BaseViewModel() {
     private val repoBE = RepositoryBackEndImpl()
     private val getMessageFromBackEndUseCase = GetMessageFromBackEndUseCase(repoBE)
     private val getMessageFromCacheUseCase = GetMessageFromCacheUseCase(repoCache)
+    private val deleteItemUseCase = DeleteItemToDB(repoCache)
 
     val messageBELiveData: MutableLiveData<Resource<String>> = MutableLiveData()
+    val deleteResultLiveData: MutableLiveData<Resource<Boolean>> = MutableLiveData()
 
     fun getMessageFromBackEnd(id: String) {
         getMessageFromBackEndUseCase.executeAndDispose(messageBELiveData, id)
@@ -25,5 +28,9 @@ class HomeViewModel : BaseViewModel() {
 
     fun getMessageCache(id: String) {
         getMessageFromCacheUseCase.invoke(id)
+    }
+
+    fun deleteItem(){
+        deleteItemUseCase.executeAndDispose(deleteResultLiveData, "White Wilson")
     }
 }

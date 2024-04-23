@@ -22,6 +22,17 @@ abstract class BaseViewModel : ViewModel() {
         this.execute(DefaultSingleObserver(mutableLiveData), params)
     }
 
+    fun <Y> CompletableUseCase<Y>.executeAndDispose(
+        mutableLiveData: MutableLiveData<Resource<Boolean>>,
+        params: Y? = null
+    ) {
+        if (!disposableList.contains(this)) {
+            disposableList.add(this)
+        }
+        mutableLiveData.postValue(Resource.loading())
+        this.execute(DefaultCompletableObserver(mutableLiveData), params)
+    }
+
     @CallSuper
     override fun onCleared() {
         disposableList.forEach { it.dispose() }
